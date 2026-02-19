@@ -1,70 +1,312 @@
-# Getting Started with Create React App
+# Podiweda Frontend - React with AWS Cognito
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Modern, responsive authentication UI integrated with AWS Cognito.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- ✅ Custom authentication UI (no Cognito Hosted UI)
+- ✅ Login, Signup, Email Verification, Password Reset
+- ✅ Fully responsive (mobile, tablet, desktop)
+- ✅ Professional SaaS-style design
+- ✅ Form validation and inline error handling
+- ✅ Loading indicators
+- ✅ Secure JWT token management
+- ✅ Automatic token attachment to API requests
+- ✅ Token expiration handling
 
-### `npm start`
+## Prerequisites
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Node.js 16+
+- npm or yarn
+- AWS Cognito User Pool configured
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Installation
 
-### `npm test`
+```bash
+cd podiweda-frontend
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Install dependencies
+npm install
+```
 
-### `npm run build`
+## Configuration
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Create `.env` file in the root directory:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+REACT_APP_AWS_REGION=us-east-1
+REACT_APP_USER_POOL_ID=us-east-1_XXXXXXXXX
+REACT_APP_CLIENT_ID=7xxxxxxxxxxxxxxxxxxxxxx
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Run Development Server
 
-### `npm run eject`
+```bash
+npm start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Application will run on `http://localhost:3000`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Build for Production
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+npm run build
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Production build will be in `build/` directory.
 
-## Learn More
+## Project Structure
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+src/
+├── components/
+│   ├── auth/
+│   │   ├── AuthContainer.js      # Main auth container
+│   │   ├── Login.js              # Login form
+│   │   ├── Signup.js             # Signup form
+│   │   ├── VerifyEmail.js        # Email verification
+│   │   ├── ForgotPassword.js     # Password reset
+│   │   └── SocialLogin.js        # Social login (optional)
+│   ├── Dashboard.js              # Protected dashboard
+│   └── ProtectedRoute.js         # Route protection
+├── contexts/
+│   └── AuthContext.js            # Auth state management
+├── styles/
+│   └── Auth.css                  # Authentication styles
+├── utils/
+│   └── api.js                    # API utility with JWT
+└── App.js                        # Main app with routing
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Authentication Flow
 
-### Code Splitting
+### Sign Up
+1. User enters name, email, password
+2. Cognito creates user account
+3. Verification code sent to email
+4. User enters code to verify email
+5. Account activated
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Sign In
+1. User enters email and password
+2. Cognito validates credentials
+3. JWT tokens generated and stored in memory
+4. User redirected to dashboard
 
-### Analyzing the Bundle Size
+### Password Reset
+1. User clicks "Forgot password"
+2. Enters email address
+3. Verification code sent to email
+4. User enters code and new password
+5. Password updated
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## API Integration
 
-### Making a Progressive Web App
+### Making Authenticated Requests
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```javascript
+import { apiRequest } from './utils/api';
 
-### Advanced Configuration
+// GET request
+const profile = await apiRequest('http://localhost:8080/api/profile');
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+// POST request
+const result = await apiRequest('http://localhost:8080/api/data', {
+  method: 'POST',
+  body: JSON.stringify({ name: 'Test' }),
+});
+```
 
-### Deployment
+### Automatic Token Handling
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+The `apiRequest` utility automatically:
+- Retrieves current JWT token from Cognito
+- Attaches token to `Authorization` header
+- Handles 401 responses (redirects to login)
+- Manages token expiration
 
-### `npm run build` fails to minify
+## Components
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### AuthContext
+
+Provides authentication state and methods:
+
+```javascript
+const {
+  user,              // Current user object
+  loading,           // Loading state
+  signUp,            // Sign up function
+  signIn,            // Sign in function
+  signOut,           // Sign out function
+  confirmSignUp,     // Email verification
+  forgotPassword,    // Request password reset
+  confirmPassword,   // Confirm password reset
+  getAccessToken,    // Get JWT token
+} = useAuth();
+```
+
+### ProtectedRoute
+
+Wraps components that require authentication:
+
+```javascript
+<Route
+  path="/dashboard"
+  element={
+    <ProtectedRoute>
+      <Dashboard />
+    </ProtectedRoute>
+  }
+/>
+```
+
+## Styling
+
+### Responsive Design
+
+The UI is fully responsive with breakpoints:
+- Desktop: > 768px
+- Tablet: 481px - 768px
+- Mobile: < 480px
+
+### Customization
+
+Edit `src/styles/Auth.css` to customize:
+- Colors and gradients
+- Border radius
+- Spacing
+- Animations
+- Button styles
+
+## Security
+
+### Token Storage
+- Tokens stored in memory (not localStorage)
+- Managed by Cognito SDK
+- Automatic refresh handling
+- No exposure in browser storage
+
+### Best Practices
+- HTTPS only in production
+- No secrets in frontend code
+- CORS properly configured
+- Input validation on all forms
+- XSS protection
+
+## Testing
+
+### Manual Testing
+
+1. **Sign Up Flow**
+   - Navigate to `/login`
+   - Click "Sign up"
+   - Fill form and submit
+   - Verify email with code
+   - Sign in
+
+2. **Sign In Flow**
+   - Enter credentials
+   - Verify redirect to dashboard
+   - Check API calls in Network tab
+
+3. **Password Reset**
+   - Click "Forgot password"
+   - Enter email
+   - Enter code and new password
+   - Sign in with new password
+
+### API Integration Testing
+
+```javascript
+// In Dashboard component
+useEffect(() => {
+  const testAPI = async () => {
+    try {
+      const data = await apiRequest('http://localhost:8080/api/profile');
+      console.log('Profile:', data);
+    } catch (err) {
+      console.error('API Error:', err);
+    }
+  };
+  testAPI();
+}, []);
+```
+
+## Deployment
+
+### Deploy to S3 + CloudFront
+
+```bash
+# Build
+npm run build
+
+# Upload to S3
+aws s3 sync build/ s3://your-bucket-name --delete
+
+# Invalidate CloudFront cache
+aws cloudfront create-invalidation \
+  --distribution-id YOUR_DIST_ID \
+  --paths "/*"
+```
+
+### Deploy to Netlify
+
+```bash
+# Build
+npm run build
+
+# Deploy
+netlify deploy --prod --dir=build
+```
+
+### Deploy to Vercel
+
+```bash
+vercel --prod
+```
+
+## Environment Variables
+
+### Development
+```bash
+REACT_APP_AWS_REGION=us-east-1
+REACT_APP_USER_POOL_ID=us-east-1_XXXXXXXXX
+REACT_APP_CLIENT_ID=7xxxxxxxxxxxxxxxxxxxxxx
+```
+
+### Production
+Update values in your hosting platform's environment settings.
+
+## Troubleshooting
+
+### Issue: "User Pool ID not found"
+**Solution:** Check `.env` file exists and contains correct values
+
+### Issue: Email verification code not received
+**Solution:** 
+- Check spam folder
+- Verify email configuration in Cognito
+- Use SES for production email delivery
+
+### Issue: CORS errors when calling backend
+**Solution:**
+- Verify backend CORS configuration
+- Check backend is running on correct port
+- Ensure `Authorization` header is allowed
+
+### Issue: Token expired errors
+**Solution:**
+- Tokens expire after 1 hour
+- User will be redirected to login automatically
+- Implement refresh token logic if needed
+
+## Dependencies
+
+Key dependencies:
+- `react` - UI framework
+- `react-router-dom` - Routing
+- `amazon-cognito-identity-js` - Cognito SDK
+
+## License
+
+MIT
