@@ -25,7 +25,9 @@ export const getAccessToken = () => {
   });
 };
 
-export const apiRequest = async (url, options = {}) => {
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+
+export const apiRequest = async (endpoint, options = {}) => {
   try {
     const token = await getAccessToken();
     const headers = {
@@ -34,23 +36,29 @@ export const apiRequest = async (url, options = {}) => {
       ...options.headers,
     };
 
+    const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
+    
     const response = await fetch(url, {
       ...options,
       headers,
     });
 
     if (response.status === 401) {
+      sessionStorage.clear();
       window.location.href = '/login';
       throw new Error('Unauthorized');
     }
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
     }
 
     return await response.json();
   } catch (error) {
-    console.error('API request failed:', error);
+    if (error.message !== 'Unauthorized') {
+      console.error('API request failed:', error);
+    }
     throw error;
   }
 };

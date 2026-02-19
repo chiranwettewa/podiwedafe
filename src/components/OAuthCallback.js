@@ -11,44 +11,32 @@ const OAuthCallback = () => {
     if (code) {
       exchangeCodeForToken(code);
     } else {
-      navigate('/login');
+      navigate('/home');
     }
   }, [navigate]);
 
   const exchangeCodeForToken = async (code) => {
-    const tokenEndpoint = `https://${process.env.REACT_APP_OAUTH_DOMAIN}/oauth2/token`;
-    const redirectUri = window.location.origin + '/callback';
-
     try {
-      const response = await fetch(tokenEndpoint, {
+      const response = await fetch('https://us-east-1lipvvw9hd.auth.us-east-1.amazoncognito.com/oauth2/token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
           grant_type: 'authorization_code',
-          client_id: process.env.REACT_APP_CLIENT_ID,
+          client_id: '2si8lnltd4fessjnv7pca233b8',
           code,
-          redirect_uri: redirectUri,
+          redirect_uri: 'http://localhost:3000',
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`Token exchange failed: ${response.status}`);
-      }
-
       const data = await response.json();
-      if (data.access_token && data.id_token) {
-        sessionStorage.setItem('accessToken', data.access_token);
-        sessionStorage.setItem('idToken', data.id_token);
-        if (data.refresh_token) {
-          sessionStorage.setItem('refreshToken', data.refresh_token);
-        }
-        window.location.href = '/home';
+      if (data.access_token) {
+        localStorage.setItem('cognitoTokens', JSON.stringify(data));
+        navigate('/home');
       } else {
-        throw new Error('Invalid token response');
+        navigate('/login');
       }
     } catch (error) {
-      console.error('OAuth callback error:', error);
-      navigate('/login?error=oauth_failed');
+      navigate('/login');
     }
   };
 

@@ -7,7 +7,7 @@ const SocialLogin = ({ onSwitchToLogin }) => {
   const redirectUri = window.location.origin + '/callback';
 
   const handleSocialLogin = (provider) => {
-    const url = `https://${oauthDomain}/oauth2/authorize?identity_provider=${provider}&redirect_uri=${redirectUri}&response_type=CODE&client_id=${clientId}&scope=email openid profile`;
+    const url = `https://${oauthDomain}/oauth2/authorize?identity_provider=${provider}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&client_id=${clientId}&scope=email+openid+profile`;
     window.location.href = url;
   };
 

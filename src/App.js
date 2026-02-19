@@ -2,8 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import AuthContainer from './components/auth/AuthContainer';
-import Dashboard from './components/Dashboard';
+import Home from './components/Home';
 import ProtectedRoute from './components/ProtectedRoute';
+import OAuthCallback from './components/auth/OAuthCallback';
 
 function App() {
   return (
@@ -11,15 +12,16 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<AuthContainer />} />
+          <Route path="/callback" element={<OAuthCallback />} />
           <Route
-            path="/dashboard"
+            path="/home"
             element={
               <ProtectedRoute>
-                <Dashboard />
+                <Home />
               </ProtectedRoute>
             }
           />
-          <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/" element={<Navigate to="/home" />} />
         </Routes>
       </Router>
     </AuthProvider>
