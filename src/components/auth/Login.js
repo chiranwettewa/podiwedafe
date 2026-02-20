@@ -16,7 +16,7 @@ const Login = ({ onSwitchToSignup, onSwitchToForgotPassword }) => {
   const handleSocialLogin = (provider) => {
     const oauthDomain = process.env.REACT_APP_OAUTH_DOMAIN;
     const clientId = process.env.REACT_APP_CLIENT_ID;
-    const redirectUri = window.location.origin + '/callback';
+    const redirectUri = `https://${oauthDomain}/oauth2/idpresponse`;
     const url = `https://${oauthDomain}/oauth2/authorize?identity_provider=${provider}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&client_id=${clientId}&scope=email+openid+profile`;
     window.location.href = url;
   };
