@@ -11,6 +11,7 @@ const PostTask = ({ onClose, onSubmit, editTask = null }) => {
     budget: '',
     budgetType: 'fixed',
     dueDate: '',
+    phoneNumber: '',
     status: 'open'
   });
 
@@ -95,6 +96,18 @@ const PostTask = ({ onClose, onSubmit, editTask = null }) => {
               value={formData.location}
               onChange={handleChange}
               placeholder="e.g., Sydney NSW 2000"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Phone Number *</label>
+            <input
+              type="tel"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              placeholder="e.g., +1 234 567 8900"
               required
             />
           </div>
