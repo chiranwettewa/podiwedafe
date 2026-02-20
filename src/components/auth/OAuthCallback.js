@@ -1,5 +1,13 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { CognitoUserPool, CognitoUser } from 'amazon-cognito-identity-js';
+
+const poolData = {
+  UserPoolId: process.env.REACT_APP_USER_POOL_ID,
+  ClientId: process.env.REACT_APP_CLIENT_ID,
+};
+
+const userPool = new CognitoUserPool(poolData);
 
 const OAuthCallback = () => {
   const navigate = useNavigate();
@@ -37,12 +45,19 @@ const OAuthCallback = () => {
 
       const data = await response.json();
       if (data.access_token && data.id_token) {
-        sessionStorage.setItem('accessToken', data.access_token);
-        sessionStorage.setItem('idToken', data.id_token);
-        if (data.refresh_token) {
-          sessionStorage.setItem('refreshToken', data.refresh_token);
+        const payload = JSON.parse(atob(data.id_token.split('.')[1]));
+        const username = payload['cognito:username'] || payload.email;
+        
+        const cognitoUser = new CognitoUser({ Username: username, Pool: userPool });
+        cognitoUser.setSignInUserSession(
+          cognitoUser.getCognitoUserSession(data.id_token, data.access_token, data.refresh_token)
+        );
+
+        let role = localStorage.getItem('userRole');
+        if (!role) {
+          role = 'client';
+          localStorage.setItem('userRole', role);
         }
-        const role = localStorage.getItem('userRole');
         window.location.href = role === 'freelancer' ? '/home-freelancer' : '/home-client';
       } else {
         throw new Error('Invalid token response');
