@@ -144,7 +144,7 @@ const Home = () => {
                 Post projects and hire talented freelancers
               </p>
 
-              <div className="stats-grid">
+              <div className="stats-grid" key={tasks.length}>
                 <div className="stat-card" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
                   <h3>Active Tasks</h3>
                   <p>{tasks.filter(t => t.status === 'open').length}</p>
