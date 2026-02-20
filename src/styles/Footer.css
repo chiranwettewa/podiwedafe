@@ -16,7 +16,7 @@
   justify-content: center;
   gap: 24px;
   margin-bottom: 8px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .contact-link {
@@ -107,8 +107,7 @@
   }
 
   .footer-contact {
-    flex-direction: column;
-    gap: 8px;
+    gap: 16px;
     margin-bottom: 10px;
   }
 

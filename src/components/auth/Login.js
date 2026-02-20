@@ -41,7 +41,11 @@ const Login = ({ onSwitchToSignup, onSwitchToForgotPassword }) => {
 
     try {
       await signIn(email, password);
-      const role = localStorage.getItem('userRole');
+      let role = localStorage.getItem('userRole');
+      if (!role) {
+        role = 'client';
+        localStorage.setItem('userRole', role);
+      }
       navigate(role === 'freelancer' ? '/home-freelancer' : '/home-client');
     } catch (err) {
       setErrors({ submit: err.message || 'Failed to sign in' });

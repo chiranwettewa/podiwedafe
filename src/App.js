@@ -5,6 +5,7 @@ import AuthContainer from './components/auth/AuthContainer';
 import Home from './components/Home';
 import FreelancerHome from './components/FreelancerHome';
 import ProtectedRoute from './components/ProtectedRoute';
+import RoleProtectedRoute from './components/RoleProtectedRoute';
 import OAuthCallback from './components/auth/OAuthCallback';
 
 function App() {
@@ -18,7 +19,9 @@ function App() {
             path="/home-client"
             element={
               <ProtectedRoute>
-                <Home />
+                <RoleProtectedRoute requiredRole="client">
+                  <Home />
+                </RoleProtectedRoute>
               </ProtectedRoute>
             }
           />
@@ -26,7 +29,9 @@ function App() {
             path="/home-freelancer"
             element={
               <ProtectedRoute>
-                <FreelancerHome />
+                <RoleProtectedRoute requiredRole="freelancer">
+                  <FreelancerHome />
+                </RoleProtectedRoute>
               </ProtectedRoute>
             }
           />
