@@ -67,6 +67,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const setUserRole = (role) => {
+    localStorage.setItem('userRole', role);
+  };
+
+  const getUserRole = () => {
+    return localStorage.getItem('userRole');
+  };
+
   const signUp = (email, password, name) => {
     return new Promise((resolve, reject) => {
       const attributeList = [
@@ -141,6 +149,7 @@ export const AuthProvider = ({ children }) => {
     if (cognitoUser) {
       cognitoUser.signOut();
       setUser(null);
+      localStorage.removeItem('userRole');
     }
   };
 
@@ -227,6 +236,8 @@ export const AuthProvider = ({ children }) => {
     resendConfirmationCode,
     getAccessToken,
     setError,
+    setUserRole,
+    getUserRole,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

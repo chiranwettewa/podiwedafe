@@ -42,7 +42,8 @@ const OAuthCallback = () => {
         if (data.refresh_token) {
           sessionStorage.setItem('refreshToken', data.refresh_token);
         }
-        window.location.href = '/home';
+        const role = localStorage.getItem('userRole');
+        window.location.href = role === 'freelancer' ? '/home-freelancer' : '/home-client';
       } else {
         throw new Error('Invalid token response');
       }

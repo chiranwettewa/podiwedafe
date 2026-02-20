@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/Auth.css';
+import logo from '../../assets/logo.png';
 
 const Login = ({ onSwitchToSignup, onSwitchToForgotPassword }) => {
   const [email, setEmail] = useState('');
@@ -39,7 +40,8 @@ const Login = ({ onSwitchToSignup, onSwitchToForgotPassword }) => {
 
     try {
       await signIn(email, password);
-      navigate('/home');
+      const role = localStorage.getItem('userRole');
+      navigate(role === 'freelancer' ? '/home-freelancer' : '/home-client');
     } catch (err) {
       setErrors({ submit: err.message || 'Failed to sign in' });
     } finally {
@@ -49,7 +51,8 @@ const Login = ({ onSwitchToSignup, onSwitchToForgotPassword }) => {
 
   return (
     <div className="auth-form-container fade-in">
-      <h2 className="auth-title">Welcome Back</h2>
+      <img src={logo} alt="Podiweda" className="auth-logo" />
+      <h2 className="auth-title">Welcome to <span style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Podiweda.com</span></h2>
       <p className="auth-subtitle">Sign in to your account</p>
 
       <form onSubmit={handleSubmit} className="auth-form">

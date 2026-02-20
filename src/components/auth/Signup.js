@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/Auth.css';
+import logo from '../../assets/logo.png';
 
 const Signup = ({ onSwitchToLogin, onVerificationNeeded }) => {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '', role: 'client' });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const { signUp } = useAuth();
@@ -31,6 +32,7 @@ const Signup = ({ onSwitchToLogin, onVerificationNeeded }) => {
 
     try {
       await signUp(formData.email, formData.password, formData.name);
+      localStorage.setItem('userRole', formData.role);
       onVerificationNeeded(formData.email);
     } catch (err) {
       setErrors({ submit: err.message || 'Failed to sign up' });
@@ -45,6 +47,7 @@ const Signup = ({ onSwitchToLogin, onVerificationNeeded }) => {
 
   return (
     <div className="auth-form-container fade-in">
+      <img src={logo} alt="Podiweda" className="auth-logo" />
       <h2 className="auth-title">Create Account</h2>
       <p className="auth-subtitle">Sign up to get started</p>
 
@@ -75,6 +78,20 @@ const Signup = ({ onSwitchToLogin, onVerificationNeeded }) => {
             placeholder="you@example.com"
           />
           {errors.email && <span className="error-message">{errors.email}</span>}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="role">I'm joining as</label>
+          <select
+            id="role"
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            className="auth-select"
+          >
+            <option value="client">Client - I want to hire</option>
+            <option value="freelancer">Freelancer - I want to work</option>
+          </select>
         </div>
 
         <div className="form-group">
