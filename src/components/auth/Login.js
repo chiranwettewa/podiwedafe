@@ -3,6 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/Auth.css';
 import logo from '../../assets/logo.png';
+import Footer from '../Footer';
 
 const Login = ({ onSwitchToSignup, onSwitchToForgotPassword }) => {
   const [email, setEmail] = useState('');
@@ -50,7 +51,8 @@ const Login = ({ onSwitchToSignup, onSwitchToForgotPassword }) => {
   };
 
   return (
-    <div className="auth-form-container fade-in">
+    <>
+      <div className="auth-form-container fade-in">
       <img src={logo} alt="Podiweda" className="auth-logo" />
       <h2 className="auth-title">Welcome to <span style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Podiweda.com</span></h2>
       <p className="auth-subtitle">Sign in to your account</p>
@@ -131,6 +133,8 @@ const Login = ({ onSwitchToSignup, onSwitchToForgotPassword }) => {
         </button>
       </p>
     </div>
+    <Footer />
+    </>
   );
 };
 

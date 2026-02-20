@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/Auth.css';
 import logo from '../../assets/logo.png';
+import Footer from '../Footer';
 
 const Signup = ({ onSwitchToLogin, onVerificationNeeded }) => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '', role: 'client' });
@@ -46,7 +47,8 @@ const Signup = ({ onSwitchToLogin, onVerificationNeeded }) => {
   };
 
   return (
-    <div className="auth-form-container fade-in">
+    <>
+      <div className="auth-form-container fade-in">
       <img src={logo} alt="Podiweda" className="auth-logo" />
       <h2 className="auth-title">Create Account</h2>
       <p className="auth-subtitle">Sign up to get started</p>
@@ -136,6 +138,8 @@ const Signup = ({ onSwitchToLogin, onVerificationNeeded }) => {
         </button>
       </p>
     </div>
+    <Footer />
+    </>
   );
 };
 

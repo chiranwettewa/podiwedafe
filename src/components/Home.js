@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
 import logo from '../assets/logo.png';
 import PostTask from './PostTask';
+import Footer from './Footer';
 import { apiRequest } from '../utils/api';
 
 const Home = () => {
@@ -13,6 +14,8 @@ const Home = () => {
   const [tasks, setTasks] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeView, setActiveView] = useState('home');
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   useEffect(() => {
     fetchTasks();
@@ -32,6 +35,11 @@ const Home = () => {
   const handleSignOut = () => {
     signOut();
     navigate('/login');
+  };
+
+  const getInitials = (name) => {
+    if (!name) return 'U';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
   const handlePostTask = async (taskData) => {
@@ -84,50 +92,81 @@ const Home = () => {
         <div className="nav-logo">
           <img src={logo} alt="Podiweda" />
         </div>
+        <div className="nav-center">
+          <button className={`nav-btn ${activeView === 'home' ? 'active' : ''}`} onClick={() => setActiveView('home')}>Home</button>
+          <button className={`nav-btn ${activeView === 'tasks' ? 'active' : ''}`} onClick={() => setActiveView('tasks')}>My Tasks</button>
+        </div>
         <div className="nav-right">
-          <span className="nav-user">{user?.name?.split(' ')[0]}</span>
-          <button onClick={handleSignOut} className="btn-signout" title="Logout">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-              <polyline points="16 17 21 12 16 7"/>
-              <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-          </button>
+          <div className="profile-menu-container">
+            <button className="profile-avatar" onClick={() => setShowProfileMenu(!showProfileMenu)}>
+              {getInitials(user?.name)}
+            </button>
+            {showProfileMenu && (
+              <div className="profile-dropdown">
+                <div className="profile-dropdown-header">
+                  <div className="profile-avatar-large">{getInitials(user?.name)}</div>
+                  <div>
+                    <div className="profile-name">{user?.name}</div>
+                    <div className="profile-email">{user?.email}</div>
+                  </div>
+                </div>
+                <div className="profile-dropdown-divider"></div>
+                <button className="profile-dropdown-item" onClick={() => setShowProfileMenu(false)}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  Edit Profile
+                </button>
+                <button className="profile-dropdown-item" onClick={handleSignOut}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                  </svg>
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </nav>
 
       <div className="home-content">
-        <div className="card">
-          <div style={{ textAlign: 'center' }}>
-            <h2 style={{ marginBottom: '8px' }}>Welcome to</h2>
-            <h2 style={{ margin: 0 }}><span style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Podiweda.com</span></h2>
-          </div>
-          <p className="card-subtitle">
-            Post projects and hire talented freelancers
-          </p>
+        {activeView === 'home' ? (
+          <>
+            <div className="card">
+              <div style={{ textAlign: 'center' }}>
+                <h2 style={{ marginBottom: '8px' }}>Welcome to</h2>
+                <h2 style={{ margin: 0 }}><span style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Podiweda.com</span></h2>
+              </div>
+              <p className="card-subtitle">
+                Post projects and hire talented freelancers
+              </p>
 
-          <div className="stats-grid">
-            <div className="stat-card" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
-              <h3>Active Tasks</h3>
-              <p>{tasks.filter(t => t.status === 'open').length}</p>
+              <div className="stats-grid">
+                <div className="stat-card" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+                  <h3>Active Tasks</h3>
+                  <p>{tasks.filter(t => t.status === 'open').length}</p>
+                </div>
+
+                <div className="stat-card" style={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' }}>
+                  <h3>Total Tasks</h3>
+                  <p>{tasks.length}</p>
+                </div>
+
+                <div className="stat-card" style={{ background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' }}>
+                  <h3>Total Budget</h3>
+                  <p>${tasks.reduce((sum, t) => sum + Number(t.budget || 0), 0)}</p>
+                </div>
+              </div>
+
+              <button className="btn-action" style={{ marginTop: '24px', width: '100%' }} onClick={() => setShowPostTask(true)}>+ Post New Task</button>
             </div>
-
-            <div className="stat-card" style={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' }}>
-              <h3>Total Tasks</h3>
-              <p>{tasks.length}</p>
-            </div>
-
-            <div className="stat-card" style={{ background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' }}>
-              <h3>Total Budget</h3>
-              <p>${tasks.reduce((sum, t) => sum + Number(t.budget || 0), 0)}</p>
-            </div>
-          </div>
-
-          <button className="btn-action" style={{ marginTop: '24px', width: '100%' }} onClick={() => setShowPostTask(true)}>+ Post New Task</button>
-        </div>
-
-        <div className="card">
-          <h3 style={{ fontSize: '24px', color: '#1a202c', margin: '0 0 24px 0', textAlign: 'center' }}>My Tasks</h3>
+          </>
+        ) : (
+          <div className="card">
+            <h3 style={{ fontSize: '24px', color: '#1a202c', margin: '0 0 24px 0', textAlign: 'center' }}>My Tasks</h3>
 
           {loading ? (
             <div className="empty-state">
@@ -170,6 +209,7 @@ const Home = () => {
             </div>
           )}
         </div>
+        )}
       </div>
 
       {showPostTask && (
@@ -179,6 +219,8 @@ const Home = () => {
           editTask={editingTask}
         />
       )}
+
+      <Footer />
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
 import logo from '../assets/logo.png';
+import Footer from './Footer';
 
 const FreelancerHome = () => {
   const { user, signOut } = useAuth();
@@ -65,6 +66,8 @@ const FreelancerHome = () => {
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };
