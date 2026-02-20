@@ -78,12 +78,14 @@
 }
 
 .form-group input {
+  width: 100%;
   padding: 12px 16px;
   border: 2px solid #e2e8f0;
   border-radius: 8px;
   font-size: 15px;
   transition: all 0.2s;
   outline: none;
+  box-sizing: border-box;
 }
 
 .form-group input:focus {
@@ -96,6 +98,7 @@
 }
 
 .auth-select {
+  width: 100%;
   padding: 12px 16px;
   border: 2px solid #e2e8f0;
   border-radius: 8px;
@@ -104,6 +107,7 @@
   outline: none;
   background: white;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .auth-select:focus {
@@ -397,6 +401,10 @@
   .auth-title {
     font-size: 24px;
   }
+
+  .auth-logo {
+    width: 100px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -405,10 +413,28 @@
   }
 
   .auth-card {
-    padding: 24px 20px;
+    padding: 24px 16px;
   }
 
   .auth-title {
-    font-size: 22px;
+    font-size: 20px;
+  }
+
+  .auth-subtitle {
+    font-size: 13px;
+  }
+
+  .auth-logo {
+    width: 80px;
+  }
+
+  .form-group input,
+  .auth-select {
+    font-size: 16px;
+  }
+
+  .social-btn-small {
+    width: 44px;
+    height: 44px;
   }
 }

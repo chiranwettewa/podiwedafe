@@ -75,12 +75,14 @@
   font-size: 28px;
   color: #1a202c;
   margin-top: 0;
+  word-wrap: break-word;
 }
 
 .card-subtitle {
   font-size: 16px;
   color: #718096;
   margin-bottom: 32px;
+  text-align: center;
 }
 
 .stats-grid {
@@ -169,15 +171,39 @@
   }
   
   .home-nav {
-    padding: 10px 20px;
+    padding: 10px 16px;
   }
   
   .nav-logo img {
-    height: 45px;
+    height: 40px;
   }
   
   .btn-signout {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .home-content {
+    padding: 20px 12px;
+  }
+
+  .card {
+    padding: 20px 16px;
+  }
+
+  .card h2 {
+    font-size: 22px;
+  }
+
+  .card-subtitle {
+    font-size: 14px;
+  }
+
+  .stat-card h3 {
+    font-size: 16px;
+  }
+
+  .btn-action {
+    width: 100%;
   }
 }

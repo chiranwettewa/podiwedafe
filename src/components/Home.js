@@ -98,7 +98,10 @@ const Home = () => {
 
       <div className="home-content">
         <div className="card">
-          <h2>Welcome to <span style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Podiweda.com</span></h2>
+          <div style={{ textAlign: 'center' }}>
+            <h2 style={{ marginBottom: '8px' }}>Welcome to</h2>
+            <h2 style={{ margin: 0 }}><span style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Podiweda.com</span></h2>
+          </div>
           <p className="card-subtitle">
             Post projects and hire talented freelancers
           </p>
@@ -119,13 +122,12 @@ const Home = () => {
               <p>${tasks.reduce((sum, t) => sum + Number(t.budget || 0), 0)}</p>
             </div>
           </div>
+
+          <button className="btn-action" style={{ marginTop: '24px', width: '100%' }} onClick={() => setShowPostTask(true)}>+ Post New Task</button>
         </div>
 
         <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-            <h3 style={{ fontSize: '24px', color: '#1a202c', margin: 0 }}>My Tasks</h3>
-            <button className="btn-action" onClick={() => setShowPostTask(true)}>+ Post New Task</button>
-          </div>
+          <h3 style={{ fontSize: '24px', color: '#1a202c', margin: '0 0 24px 0', textAlign: 'center' }}>My Tasks</h3>
 
           {loading ? (
             <div className="empty-state">
