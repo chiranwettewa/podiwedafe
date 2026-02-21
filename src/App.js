@@ -3,10 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './contexts/AuthContext';
 import AuthContainer from './components/auth/AuthContainer';
 import Home from './components/Home';
-import FreelancerHome from './components/FreelancerHome';
+import MyTasks from './components/MyTasks';
+import Jobs from './components/Jobs';
 import ProtectedRoute from './components/ProtectedRoute';
-import RoleProtectedRoute from './components/RoleProtectedRoute';
-import OAuthCallback from './components/auth/OAuthCallback';
 
 function App() {
   return (
@@ -14,24 +13,27 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<AuthContainer />} />
-          <Route path="/callback" element={<OAuthCallback />} />
           <Route
-            path="/home-client"
+            path="/home"
             element={
               <ProtectedRoute>
-                <RoleProtectedRoute requiredRole="client">
-                  <Home />
-                </RoleProtectedRoute>
+                <Home />
               </ProtectedRoute>
             }
           />
           <Route
-            path="/home-freelancer"
+            path="/mytasks"
             element={
               <ProtectedRoute>
-                <RoleProtectedRoute requiredRole="freelancer">
-                  <FreelancerHome />
-                </RoleProtectedRoute>
+                <MyTasks />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/jobs"
+            element={
+              <ProtectedRoute>
+                <Jobs />
               </ProtectedRoute>
             }
           />

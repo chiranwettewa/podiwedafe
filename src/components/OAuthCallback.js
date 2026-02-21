@@ -17,14 +17,18 @@ const OAuthCallback = () => {
 
   const exchangeCodeForToken = async (code) => {
     try {
-      const response = await fetch('https://us-east-1lipvvw9hd.auth.us-east-1.amazoncognito.com/oauth2/token', {
+      const oauthDomain = process.env.REACT_APP_OAUTH_DOMAIN;
+      const clientId = process.env.REACT_APP_CLIENT_ID;
+      const redirectUri = window.location.origin;
+      
+      const response = await fetch(`https://${oauthDomain}/oauth2/token`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
           grant_type: 'authorization_code',
-          client_id: '2si8lnltd4fessjnv7pca233b8',
+          client_id: clientId,
           code,
-          redirect_uri: 'http://localhost:3000',
+          redirect_uri: redirectUri,
         }),
       });
 

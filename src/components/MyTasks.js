@@ -7,7 +7,7 @@ import PostTask from './PostTask';
 import Footer from './Footer';
 import { apiRequest } from '../utils/api';
 
-const Home = () => {
+const MyTasks = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [showPostTask, setShowPostTask] = useState(false);
@@ -92,8 +92,8 @@ const Home = () => {
           <img src={logo} alt="Podiweda" />
         </div>
         <div className="nav-center">
-          <button className="nav-btn active">Home</button>
-          <button className="nav-btn" onClick={() => navigate('/mytasks')}>My Tasks</button>
+          <button className="nav-btn" onClick={() => navigate('/home')}>Home</button>
+          <button className="nav-btn active">My Tasks</button>
           <button className="nav-btn" onClick={() => navigate('/jobs')}>Find Jobs</button>
         </div>
         <div className="nav-right">
@@ -134,38 +134,50 @@ const Home = () => {
 
       <div className="home-content">
         <div className="card">
-          <div style={{ textAlign: 'center' }}>
-            <h2 style={{ marginBottom: '8px' }}>Welcome to</h2>
-            <h2 style={{ margin: 0 }}><span style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Podiweda.com</span></h2>
-          </div>
-          <p className="card-subtitle">
-            Post projects and hire talented freelancers
-          </p>
+          <h3 style={{ fontSize: '24px', color: '#1a202c', margin: '0 0 24px 0', textAlign: 'center' }}>My Tasks</h3>
 
-          <div className="stats-grid" key={tasks.length}>
-            <div className="stat-card" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
-              <h3>Active Tasks</h3>
-              <p>{tasks.filter(t => t.status === 'open').length}</p>
+          {loading ? (
+            <div className="empty-state">
+              <p>Loading tasks...</p>
             </div>
-
-            <div className="stat-card" style={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' }}>
-              <h3>Total Tasks</h3>
-              <p>{tasks.length}</p>
+          ) : tasks.length === 0 ? (
+            <div className="empty-state">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <line x1="9" y1="9" x2="15" y2="9"/>
+                <line x1="9" y1="15" x2="15" y2="15"/>
+              </svg>
+              <p>No tasks posted yet. Click "Post New Task" to get started!</p>
+              <button className="btn-action" style={{ marginTop: '16px' }} onClick={() => setShowPostTask(true)}>+ Post New Task</button>
             </div>
-
-            <div className="stat-card" style={{ background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' }}>
-              <h3>Total Budget</h3>
-              <p>${tasks.reduce((sum, t) => sum + Number(t.budget || 0), 0)}</p>
+          ) : (
+            <div>
+              <button className="btn-action" style={{ marginBottom: '24px', width: '100%' }} onClick={() => setShowPostTask(true)}>+ Post New Task</button>
+              {tasks.map(task => (
+                <div key={task.id} className="task-card">
+                  <div className="task-header">
+                    <div>
+                      <h4 className="task-title">{task.title}</h4>
+                      <div className="task-meta">
+                        <span className="task-badge badge-category">{task.category}</span>
+                        <span className="task-badge badge-location">📍 {task.location}</span>
+                        <span className="task-badge badge-budget">${task.budget} {task.budgetType === 'hourly' ? '/hr' : ''}</span>
+                        <span className="task-badge badge-status">{task.taskType}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="task-description">{task.description}</p>
+                  <div style={{ fontSize: '13px', color: '#718096', marginBottom: '12px' }}>
+                    Due: {new Date(task.dueDate).toLocaleDateString()}
+                  </div>
+                  <div className="task-actions">
+                    <button className="btn-edit" onClick={() => handleEditTask(task)}>Edit</button>
+                    <button className="btn-delete" onClick={() => handleDeleteTask(task.id)}>Delete</button>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
-
-          <button className="btn-action" style={{ marginTop: '24px', width: '100%' }} onClick={() => setShowPostTask(true)}>+ Post New Task</button>
-          
-          <div style={{ marginTop: '32px', padding: '24px', background: '#f7fafc', borderRadius: '12px', textAlign: 'center' }}>
-            <h3 style={{ fontSize: '20px', marginBottom: '12px' }}>Looking for work?</h3>
-            <p style={{ color: '#718096', marginBottom: '16px' }}>Find available jobs and start earning</p>
-            <button className="btn-action" style={{ width: '100%' }} onClick={() => navigate('/jobs')}>Find Jobs</button>
-          </div>
+          )}
         </div>
       </div>
 
@@ -182,4 +194,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default MyTasks;

@@ -67,14 +67,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const setUserRole = (role) => {
-    localStorage.setItem('userRole', role);
-  };
-
-  const getUserRole = () => {
-    return localStorage.getItem('userRole');
-  };
-
   const signUp = (email, password, name) => {
     return new Promise((resolve, reject) => {
       const attributeList = [
@@ -88,6 +80,8 @@ export const AuthProvider = ({ children }) => {
           reject(err);
           return;
         }
+        // Store the username for confirmation
+        localStorage.setItem('tempUsername', result.user.getUsername());
         resolve(result.user);
       });
     });
@@ -95,8 +89,11 @@ export const AuthProvider = ({ children }) => {
 
   const confirmSignUp = (email, code) => {
     return new Promise((resolve, reject) => {
+      // Use the stored username from signup
+      const username = localStorage.getItem('tempUsername') || email;
+      
       const cognitoUser = new CognitoUser({
-        Username: email,
+        Username: username,
         Pool: userPool,
       });
 
@@ -106,6 +103,8 @@ export const AuthProvider = ({ children }) => {
           reject(err);
           return;
         }
+        // Clean up temp storage
+        localStorage.removeItem('tempUsername');
         resolve(result);
       });
     });
@@ -149,7 +148,6 @@ export const AuthProvider = ({ children }) => {
     if (cognitoUser) {
       cognitoUser.signOut();
       setUser(null);
-      localStorage.removeItem('userRole');
     }
   };
 
@@ -236,8 +234,6 @@ export const AuthProvider = ({ children }) => {
     resendConfirmationCode,
     getAccessToken,
     setError,
-    setUserRole,
-    getUserRole,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

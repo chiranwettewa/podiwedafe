@@ -3,7 +3,6 @@ import Login from './Login';
 import Signup from './Signup';
 import VerifyEmail from './VerifyEmail';
 import ForgotPassword from './ForgotPassword';
-import SocialLogin from './SocialLogin';
 import '../../styles/Auth.css';
 
 const AuthContainer = () => {
@@ -43,9 +42,6 @@ const AuthContainer = () => {
         )}
         {view === 'forgot' && (
           <ForgotPassword onSwitchToLogin={() => setView('login')} />
-        )}
-        {view === 'social' && (
-          <SocialLogin onSwitchToLogin={() => setView('login')} />
         )}
       </div>
     </div>
