@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/PostTask.css';
+import { locationData } from '../utils/locationData';
 
 const PostTask = ({ onClose, onSubmit, editTask = null }) => {
   const [formData, setFormData] = useState(editTask || {
     title: '',
     description: '',
     category: 'cleaning',
-    location: '',
+    district: '',
+    city: '',
+    address: '',
     taskType: 'in-person',
     budget: '',
     budgetType: 'fixed',
@@ -15,8 +18,22 @@ const PostTask = ({ onClose, onSubmit, editTask = null }) => {
     status: 'open'
   });
 
+  const [availableCities, setAvailableCities] = useState([]);
+
+  useEffect(() => {
+    if (editTask && editTask.district) {
+      setAvailableCities(locationData[editTask.district] || []);
+    }
+  }, [editTask]);
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    
+    if (name === 'district') {
+      setAvailableCities(locationData[value] || []);
+      setFormData({ ...formData, district: value, city: '' });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -88,14 +105,36 @@ const PostTask = ({ onClose, onSubmit, editTask = null }) => {
             </div>
           </div>
 
+          <div className="form-row">
+            <div className="form-group">
+              <label>District *</label>
+              <select name="district" value={formData.district} onChange={handleChange} required>
+                <option value="">Select District</option>
+                {Object.keys(locationData).map(district => (
+                  <option key={district} value={district}>{district}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>City *</label>
+              <select name="city" value={formData.city} onChange={handleChange} required disabled={!formData.district}>
+                <option value="">Select City</option>
+                {availableCities.map(city => (
+                  <option key={city} value={city}>{city}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           <div className="form-group">
-            <label>Location *</label>
+            <label>Address *</label>
             <input
               type="text"
-              name="location"
-              value={formData.location}
+              name="address"
+              value={formData.address}
               onChange={handleChange}
-              placeholder="e.g., Sydney NSW 2000"
+              placeholder="e.g., 123 Main Street"
               required
             />
           </div>

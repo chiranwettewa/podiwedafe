@@ -160,7 +160,7 @@ const MyTasks = () => {
                       <h4 className="task-title">{task.title}</h4>
                       <div className="task-meta">
                         <span className="task-badge badge-category">{task.category}</span>
-                        <span className="task-badge badge-location">📍 {task.location}</span>
+                        <span className="task-badge badge-location">📍 {task.district}, {task.city}</span>
                         <span className="task-badge badge-budget">${task.budget} {task.budgetType === 'hourly' ? '/hr' : ''}</span>
                         <span className="task-badge badge-status">{task.taskType}</span>
                       </div>
