@@ -3,6 +3,7 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 .home-nav {
@@ -209,6 +210,7 @@
   max-width: 1000px;
   width: 100%;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .card {
@@ -219,7 +221,9 @@
   margin-bottom: 32px;
   min-height: 400px;
   width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .card h2 {
@@ -425,6 +429,10 @@
 
 /* Mobile - Hide user name on very small screens */
 @media (max-width: 480px) {
+  .home-container {
+    overflow-x: hidden;
+  }
+
   .home-nav {
     padding: 10px 16px;
   }
@@ -460,11 +468,15 @@
   }
 
   .home-content {
-    padding: 20px 12px;
+    padding: 20px 10px;
   }
 
   .card {
-    padding: 20px 16px;
+    padding: 20px 14px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .card h2 {

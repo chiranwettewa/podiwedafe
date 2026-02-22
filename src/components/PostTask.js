@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 import '../styles/PostTask.css';
-import { locationData } from '../utils/locationData';
+import { getDistricts, getCities } from '../utils/locationData';
 
 const PostTask = ({ onClose, onSubmit, editTask = null }) => {
+  const { t, language } = useLanguage();
   const [formData, setFormData] = useState(editTask || {
     title: '',
     description: '',
@@ -22,16 +24,16 @@ const PostTask = ({ onClose, onSubmit, editTask = null }) => {
 
   useEffect(() => {
     if (editTask && editTask.district) {
-      setAvailableCities(locationData[editTask.district] || []);
+      setAvailableCities(getCities(language, editTask.district));
     }
-  }, [editTask]);
+  }, [editTask, language]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     
     if (name === 'district') {
-      setAvailableCities(locationData[value] || []);
+      setAvailableCities(getCities(language, value));
       setFormData({ ...formData, district: value, city: '' });
     }
   };
@@ -50,13 +52,13 @@ const PostTask = ({ onClose, onSubmit, editTask = null }) => {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>{editTask ? 'Edit Task' : 'Post a New Task'}</h2>
+          <h2>{editTask ? t('task.editTask') : t('task.postTask')}</h2>
           <button className="close-btn" onClick={onClose}>&times;</button>
         </div>
 
         <form onSubmit={handleSubmit} className="task-form">
           <div className="form-group">
-            <label>Task Title *</label>
+            <label>{t('task.title')} *</label>
             <input
               type="text"
               name="title"
@@ -68,7 +70,7 @@ const PostTask = ({ onClose, onSubmit, editTask = null }) => {
           </div>
 
           <div className="form-group">
-            <label>Description *</label>
+            <label>{t('task.description')} *</label>
             <textarea
               name="description"
               value={formData.description}
@@ -81,43 +83,44 @@ const PostTask = ({ onClose, onSubmit, editTask = null }) => {
 
           <div className="form-row">
             <div className="form-group">
-              <label>Category *</label>
+              <label>{t('task.category')} *</label>
               <select name="category" value={formData.category} onChange={handleChange}>
-                <option value="cleaning">Cleaning</option>
-                <option value="handyman">Handyman</option>
-                <option value="delivery">Delivery</option>
-                <option value="gardening">Gardening</option>
-                <option value="moving">Moving</option>
-                <option value="assembly">Assembly</option>
-                <option value="photography">Photography</option>
-                <option value="writing">Writing</option>
-                <option value="design">Design</option>
-                <option value="other">Other</option>
+                <option value="cleaning">{t('categories.cleaning')}</option>
+                <option value="handyman">{t('categories.handyman')}</option>
+                <option value="delivery">{t('categories.delivery')}</option>
+                <option value="gardening">{t('categories.gardening')}</option>
+                <option value="moving">{t('categories.moving')}</option>
+                <option value="assembly">{t('categories.assembly')}</option>
+                <option value="photography">{t('categories.photography')}</option>
+                <option value="writing">{t('categories.writing')}</option>
+                <option value="design">{t('categories.design')}</option>
+                <option value="elderly-care">{t('categories.elderlyCare')}</option>
+                <option value="other">{t('categories.other')}</option>
               </select>
             </div>
 
             <div className="form-group">
-              <label>Task Type *</label>
+              <label>{t('task.taskType')} *</label>
               <select name="taskType" value={formData.taskType} onChange={handleChange}>
-                <option value="in-person">In Person</option>
-                <option value="remote">Remote</option>
+                <option value="in-person">{t('taskTypes.inPerson')}</option>
+                <option value="remote">{t('taskTypes.remote')}</option>
               </select>
             </div>
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label>District *</label>
+              <label>{t('task.district')} *</label>
               <select name="district" value={formData.district} onChange={handleChange} required>
                 <option value="">Select District</option>
-                {Object.keys(locationData).map(district => (
+                {getDistricts(language).map(district => (
                   <option key={district} value={district}>{district}</option>
                 ))}
               </select>
             </div>
 
             <div className="form-group">
-              <label>City *</label>
+              <label>{t('task.city')} *</label>
               <select name="city" value={formData.city} onChange={handleChange} required disabled={!formData.district}>
                 <option value="">Select City</option>
                 {availableCities.map(city => (
@@ -128,7 +131,7 @@ const PostTask = ({ onClose, onSubmit, editTask = null }) => {
           </div>
 
           <div className="form-group">
-            <label>Address *</label>
+            <label>{t('task.address')} *</label>
             <input
               type="text"
               name="address"
@@ -140,7 +143,7 @@ const PostTask = ({ onClose, onSubmit, editTask = null }) => {
           </div>
 
           <div className="form-group">
-            <label>Phone Number *</label>
+            <label>{t('task.phoneNumber')} *</label>
             <input
               type="tel"
               name="phoneNumber"
@@ -153,15 +156,15 @@ const PostTask = ({ onClose, onSubmit, editTask = null }) => {
 
           <div className="form-row">
             <div className="form-group">
-              <label>Budget Type *</label>
+              <label>{t('task.budgetType')} *</label>
               <select name="budgetType" value={formData.budgetType} onChange={handleChange}>
-                <option value="fixed">Fixed Price</option>
-                <option value="hourly">Hourly Rate</option>
+                <option value="fixed">{t('budgetTypes.fixed')}</option>
+                <option value="hourly">{t('budgetTypes.hourly')}</option>
               </select>
             </div>
 
             <div className="form-group">
-              <label>Budget (${formData.budgetType === 'hourly' ? '/hr' : ''}) *</label>
+              <label>{t('task.budget')} (${formData.budgetType === 'hourly' ? '/hr' : ''}) *</label>
               <input
                 type="number"
                 name="budget"
@@ -175,7 +178,7 @@ const PostTask = ({ onClose, onSubmit, editTask = null }) => {
           </div>
 
           <div className="form-group">
-            <label>Due Date *</label>
+            <label>{t('task.dueDate')} *</label>
             <input
               type="date"
               name="dueDate"
@@ -188,10 +191,10 @@ const PostTask = ({ onClose, onSubmit, editTask = null }) => {
 
           <div className="form-actions">
             <button type="button" className="btn-cancel" onClick={onClose}>
-              Cancel
+              {t('task.cancel')}
             </button>
             <button type="submit" className="btn-submit">
-              {editTask ? 'Update Task' : 'Post Task'}
+              {editTask ? t('task.updateTask') : t('task.postTask')}
             </button>
           </div>
         </form>

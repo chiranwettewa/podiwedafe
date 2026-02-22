@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
 import logo from '../assets/logo.png';
 import Footer from './Footer';
+import LanguageToggle from './LanguageToggle';
 import { apiRequest } from '../utils/api';
-import { locationData } from '../utils/locationData';
+import { getDistricts, getCities } from '../utils/locationData';
 
 const Jobs = () => {
   const { user, signOut } = useAuth();
+  const { t, language } = useLanguage();
   const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
@@ -68,7 +71,7 @@ const Jobs = () => {
     const { name, value } = e.target;
     
     if (name === 'district') {
-      setAvailableCities(locationData[value] || []);
+      setAvailableCities(getCities(language, value));
       setFilters({ ...filters, district: value, city: '' });
     } else {
       setFilters({ ...filters, [name]: value });
@@ -97,13 +100,13 @@ const Jobs = () => {
           <img src={logo} alt="Podiweda" />
         </div>
         <div className="nav-center">
-          <button className="nav-btn" onClick={() => navigate('/home')}>Home</button>
-          <button className="nav-btn" onClick={() => navigate('/mytasks')}>My Tasks</button>
-          <button className="nav-btn active">Find Jobs</button>
-          <button className="nav-btn" onClick={() => navigate('/about')}>About</button>
-          <button className="nav-btn" onClick={() => navigate('/services')}>Services</button>
+          <button className="nav-btn" onClick={() => navigate('/home')}>{t('nav.home')}</button>
+          <button className="nav-btn" onClick={() => navigate('/mytasks')}>{t('nav.myTasks')}</button>
+          <button className="nav-btn active">{t('nav.findJobs')}</button>
+          <button className="nav-btn" onClick={() => navigate('/about')}>{t('nav.about')}</button>
         </div>
         <div className="nav-right">
+          <LanguageToggle />
           <div className="profile-menu-container">
             <button className="profile-avatar" onClick={() => setShowProfileMenu(!showProfileMenu)}>
               {getInitials(user?.name)}
@@ -122,7 +125,7 @@ const Jobs = () => {
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
                   </svg>
-                  Edit Profile
+                  {t('nav.profile')}
                 </button>
                 <button className="profile-dropdown-item" onClick={handleSignOut}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -130,7 +133,7 @@ const Jobs = () => {
                     <polyline points="16 17 21 12 16 7"/>
                     <line x1="21" y1="12" x2="9" y2="12"/>
                   </svg>
-                  Logout
+                  {t('nav.signOut')}
                 </button>
               </div>
             )}
@@ -140,48 +143,49 @@ const Jobs = () => {
 
       <div className="home-content">
         <div className="card">
-          <h3 style={{ fontSize: '24px', color: '#1a202c', margin: '0 0 24px 0', textAlign: 'center' }}>Available Jobs</h3>
+          <h3 style={{ fontSize: '24px', color: '#1a202c', margin: '0 0 24px 0', textAlign: 'center' }}>{t('jobs.availableJobs')}</h3>
 
           <div style={{ marginBottom: '24px', padding: '16px', background: '#f7fafc', borderRadius: '8px' }}>
             <div className="form-row">
               <div className="form-group" style={{ margin: 0 }}>
-                <label style={{ fontSize: '14px', marginBottom: '4px' }}>Category</label>
+                <label style={{ fontSize: '14px', marginBottom: '4px' }}>{t('task.category')}</label>
                 <select name="category" value={filters.category} onChange={handleFilterChange} style={{ padding: '8px' }}>
-                  <option value="">All Categories</option>
-                  <option value="cleaning">Cleaning</option>
-                  <option value="handyman">Handyman</option>
-                  <option value="delivery">Delivery</option>
-                  <option value="gardening">Gardening</option>
-                  <option value="moving">Moving</option>
-                  <option value="assembly">Assembly</option>
-                  <option value="photography">Photography</option>
-                  <option value="writing">Writing</option>
-                  <option value="design">Design</option>
-                  <option value="other">Other</option>
+                  <option value="">{t('jobs.allCategories')}</option>
+                  <option value="cleaning">{t('categories.cleaning')}</option>
+                  <option value="handyman">{t('categories.handyman')}</option>
+                  <option value="delivery">{t('categories.delivery')}</option>
+                  <option value="gardening">{t('categories.gardening')}</option>
+                  <option value="moving">{t('categories.moving')}</option>
+                  <option value="assembly">{t('categories.assembly')}</option>
+                  <option value="photography">{t('categories.photography')}</option>
+                  <option value="writing">{t('categories.writing')}</option>
+                  <option value="design">{t('categories.design')}</option>
+                  <option value="elderly-care">{t('categories.elderlyCare')}</option>
+                  <option value="other">{t('categories.other')}</option>
                 </select>
               </div>
 
               <div className="form-group" style={{ margin: 0 }}>
-                <label style={{ fontSize: '14px', marginBottom: '4px' }}>Task Type</label>
+                <label style={{ fontSize: '14px', marginBottom: '4px' }}>{t('task.taskType')}</label>
                 <select name="taskType" value={filters.taskType} onChange={handleFilterChange} style={{ padding: '8px' }}>
-                  <option value="">All Types</option>
-                  <option value="in-person">In Person</option>
-                  <option value="remote">Remote</option>
+                  <option value="">{t('jobs.allTypes')}</option>
+                  <option value="in-person">{t('taskTypes.inPerson')}</option>
+                  <option value="remote">{t('taskTypes.remote')}</option>
                 </select>
               </div>
 
               <div className="form-group" style={{ margin: 0 }}>
-                <label style={{ fontSize: '14px', marginBottom: '4px' }}>District</label>
+                <label style={{ fontSize: '14px', marginBottom: '4px' }}>{t('task.district')}</label>
                 <select name="district" value={filters.district} onChange={handleFilterChange} style={{ padding: '8px' }}>
-                  <option value="">All Districts</option>
-                  {Object.keys(locationData).map(district => (
+                  <option value="">{t('jobs.allDistricts')}</option>
+                  {getDistricts(language).map(district => (
                     <option key={district} value={district}>{district}</option>
                   ))}
                 </select>
               </div>
 
               <div className="form-group" style={{ margin: 0 }}>
-                <label style={{ fontSize: '14px', marginBottom: '4px' }}>City</label>
+                <label style={{ fontSize: '14px', marginBottom: '4px' }}>{t('task.city')}</label>
                 <select name="city" value={filters.city} onChange={handleFilterChange} disabled={!filters.district} style={{ padding: '8px' }}>
                   <option value="">All Cities</option>
                   {availableCities.map(city => (

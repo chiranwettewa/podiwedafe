@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
 import logo from '../assets/logo.png';
 import Footer from './Footer';
+import LanguageToggle from './LanguageToggle';
 
 const Services = () => {
   const { user, signOut } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
@@ -30,6 +33,7 @@ const Services = () => {
     { icon: '📸', title: 'Photography', desc: 'Professional photo and video services' },
     { icon: '✍️', title: 'Writing', desc: 'Content writing and copywriting' },
     { icon: '🎨', title: 'Design', desc: 'Graphic design and creative services' },
+    { icon: '👴', title: 'Elderly Care', desc: 'Compassionate care for seniors' },
   ];
 
   return (
@@ -39,13 +43,14 @@ const Services = () => {
           <img src={logo} alt="Podiweda" />
         </div>
         <div className="nav-center">
-          <button className="nav-btn" onClick={() => navigate('/home')}>Home</button>
-          <button className="nav-btn" onClick={() => navigate('/mytasks')}>My Tasks</button>
-          <button className="nav-btn" onClick={() => navigate('/jobs')}>Find Jobs</button>
-          <button className="nav-btn" onClick={() => navigate('/about')}>About</button>
-          <button className="nav-btn active">Services</button>
+          <button className="nav-btn" onClick={() => navigate('/home')}>{t('nav.home')}</button>
+          <button className="nav-btn" onClick={() => navigate('/mytasks')}>{t('nav.myTasks')}</button>
+          <button className="nav-btn" onClick={() => navigate('/jobs')}>{t('nav.findJobs')}</button>
+          <button className="nav-btn" onClick={() => navigate('/about')}>{t('nav.about')}</button>
+          <button className="nav-btn active">{t('nav.services')}</button>
         </div>
         <div className="nav-right">
+          <LanguageToggle />
           <div className="profile-menu-container">
             <button className="profile-avatar" onClick={() => setShowProfileMenu(!showProfileMenu)}>
               {getInitials(user?.name)}
@@ -65,7 +70,7 @@ const Services = () => {
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
                   </svg>
-                  Edit Profile
+                  {t('nav.profile')}
                 </button>
                 <button className="profile-dropdown-item" onClick={handleSignOut}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -73,7 +78,7 @@ const Services = () => {
                     <polyline points="16 17 21 12 16 7"/>
                     <line x1="21" y1="12" x2="9" y2="12"/>
                   </svg>
-                  Logout
+                  {t('nav.signOut')}
                 </button>
               </div>
             )}

@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
 import logo from '../assets/logo.png';
 import PostTask from './PostTask';
 import Footer from './Footer';
+import LanguageToggle from './LanguageToggle';
 import { apiRequest } from '../utils/api';
 
 const MyTasks = () => {
   const { user, signOut } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [showPostTask, setShowPostTask] = useState(false);
   const [tasks, setTasks] = useState([]);
@@ -121,13 +124,13 @@ const MyTasks = () => {
           <img src={logo} alt="Podiweda" />
         </div>
         <div className="nav-center">
-          <button className="nav-btn" onClick={() => navigate('/home')}>Home</button>
-          <button className="nav-btn active">My Tasks</button>
-          <button className="nav-btn" onClick={() => navigate('/jobs')}>Find Jobs</button>
-          <button className="nav-btn" onClick={() => navigate('/about')}>About</button>
-          <button className="nav-btn" onClick={() => navigate('/services')}>Services</button>
+          <button className="nav-btn" onClick={() => navigate('/home')}>{t('nav.home')}</button>
+          <button className="nav-btn active">{t('nav.myTasks')}</button>
+          <button className="nav-btn" onClick={() => navigate('/jobs')}>{t('nav.findJobs')}</button>
+          <button className="nav-btn" onClick={() => navigate('/about')}>{t('nav.about')}</button>
         </div>
         <div className="nav-right">
+          <LanguageToggle />
           <div className="profile-menu-container">
             <button className="profile-avatar" onClick={() => setShowProfileMenu(!showProfileMenu)}>
               {getInitials(user?.name)}
@@ -147,7 +150,7 @@ const MyTasks = () => {
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
                   </svg>
-                  Edit Profile
+                  {t('nav.profile')}
                 </button>
                 <button className="profile-dropdown-item" onClick={handleSignOut}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -155,7 +158,7 @@ const MyTasks = () => {
                     <polyline points="16 17 21 12 16 7"/>
                     <line x1="21" y1="12" x2="9" y2="12"/>
                   </svg>
-                  Logout
+                  {t('nav.signOut')}
                 </button>
               </div>
             )}
@@ -165,7 +168,24 @@ const MyTasks = () => {
 
       <div className="home-content">
         <div className="card">
-          <h3 style={{ fontSize: '24px', color: '#1a202c', margin: '0 0 24px 0', textAlign: 'center' }}>My Tasks</h3>
+          <h3 style={{ fontSize: '24px', color: '#1a202c', margin: '0 0 24px 0', textAlign: 'center' }}>{t('nav.myTasks')}</h3>
+
+          <div className="stats-grid" style={{ marginBottom: '24px' }}>
+            <div className="stat-card" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+              <h3>{t('home.activeTasks')}</h3>
+              <p>{tasks.filter(t => t.status === 'open').length}</p>
+            </div>
+
+            <div className="stat-card" style={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' }}>
+              <h3>{t('home.totalTasks')}</h3>
+              <p>{tasks.length}</p>
+            </div>
+
+            <div className="stat-card" style={{ background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' }}>
+              <h3>{t('home.totalBudget')}</h3>
+              <p>${tasks.reduce((sum, t) => sum + Number(t.budget || 0), 0)}</p>
+            </div>
+          </div>
 
           {loading ? (
             <div className="empty-state">
@@ -178,12 +198,12 @@ const MyTasks = () => {
                 <line x1="9" y1="9" x2="15" y2="9"/>
                 <line x1="9" y1="15" x2="15" y2="15"/>
               </svg>
-              <p>No tasks posted yet. Click "Post New Task" to get started!</p>
-              <button className="btn-action" style={{ marginTop: '16px' }} onClick={() => setShowPostTask(true)}>+ Post New Task</button>
+              <p>{t('home.noTasksYet')}</p>
+              <button className="btn-action" style={{ marginTop: '16px' }} onClick={() => setShowPostTask(true)}>+ {t('task.postTask')}</button>
             </div>
           ) : (
             <div>
-              <button className="btn-action" style={{ marginBottom: '24px', width: '100%' }} onClick={() => setShowPostTask(true)}>+ Post New Task</button>
+              <button className="btn-action" style={{ marginBottom: '24px', width: '100%' }} onClick={() => setShowPostTask(true)}>+ {t('task.postTask')}</button>
               {tasks.map(task => (
                 <div key={task.id} className="task-card">
                   <div className="task-header">
@@ -202,8 +222,8 @@ const MyTasks = () => {
                     Due: {new Date(task.dueDate).toLocaleDateString()}
                   </div>
                   <div className="task-actions">
-                    <button className="btn-edit" onClick={() => handleEditTask(task)}>Edit</button>
-                    <button className="btn-delete" onClick={() => handleDeleteTask(task.id)}>Delete</button>
+                    <button className="btn-edit" onClick={() => handleEditTask(task)}>{t('task.edit')}</button>
+                    <button className="btn-delete" onClick={() => handleDeleteTask(task.id)}>{t('task.delete')}</button>
                   </div>
                 </div>
               ))}

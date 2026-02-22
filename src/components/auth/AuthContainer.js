@@ -3,6 +3,7 @@ import Login from './Login';
 import Signup from './Signup';
 import VerifyEmail from './VerifyEmail';
 import ForgotPassword from './ForgotPassword';
+import LanguageToggle from '../LanguageToggle';
 import '../../styles/Auth.css';
 
 const AuthContainer = () => {
@@ -20,6 +21,9 @@ const AuthContainer = () => {
 
   return (
     <div className="auth-container">
+      <div style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 1000 }}>
+        <LanguageToggle />
+      </div>
       <div className="auth-card">
         {view === 'login' && (
           <Login

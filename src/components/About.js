@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
 import logo from '../assets/logo.png';
 import Footer from './Footer';
+import LanguageToggle from './LanguageToggle';
 
 const About = () => {
   const { user, signOut } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
@@ -27,13 +30,13 @@ const About = () => {
           <img src={logo} alt="Podiweda" />
         </div>
         <div className="nav-center">
-          <button className="nav-btn" onClick={() => navigate('/home')}>Home</button>
-          <button className="nav-btn" onClick={() => navigate('/mytasks')}>My Tasks</button>
-          <button className="nav-btn" onClick={() => navigate('/jobs')}>Find Jobs</button>
-          <button className="nav-btn active">About</button>
-          <button className="nav-btn" onClick={() => navigate('/services')}>Services</button>
+          <button className="nav-btn" onClick={() => navigate('/home')}>{t('nav.home')}</button>
+          <button className="nav-btn" onClick={() => navigate('/mytasks')}>{t('nav.myTasks')}</button>
+          <button className="nav-btn" onClick={() => navigate('/jobs')}>{t('nav.findJobs')}</button>
+          <button className="nav-btn active">{t('nav.about')}</button>
         </div>
         <div className="nav-right">
+          <LanguageToggle />
           <div className="profile-menu-container">
             <button className="profile-avatar" onClick={() => setShowProfileMenu(!showProfileMenu)}>
               {getInitials(user?.name)}
@@ -53,7 +56,7 @@ const About = () => {
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
                   </svg>
-                  Edit Profile
+                  {t('nav.profile')}
                 </button>
                 <button className="profile-dropdown-item" onClick={handleSignOut}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -61,7 +64,7 @@ const About = () => {
                     <polyline points="16 17 21 12 16 7"/>
                     <line x1="21" y1="12" x2="9" y2="12"/>
                   </svg>
-                  Logout
+                  {t('nav.signOut')}
                 </button>
               </div>
             )}
@@ -71,30 +74,27 @@ const About = () => {
 
       <div className="home-content">
         <div className="card">
-          <h2 style={{ textAlign: 'center', marginBottom: '24px' }}>About <span style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Podiweda.com</span></h2>
+          <h2 style={{ textAlign: 'center', marginBottom: '24px' }}>{t('about.title')} <span style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Podiweda.com</span></h2>
           
           <div style={{ lineHeight: '1.8', color: '#2d3748' }}>
-            <h3 style={{ color: '#667eea', marginTop: '32px' }}>Who We Are</h3>
-            <p>Podiweda.com is Sri Lanka's premier freelance marketplace connecting talented professionals with clients who need their services. We bridge the gap between skilled freelancers and businesses looking for quality work.</p>
+            <h3 style={{ color: '#667eea', marginTop: '32px' }}>{t('about.whoWeAre')}</h3>
+            <p>{t('about.whoWeAreText')}</p>
 
-            <h3 style={{ color: '#667eea', marginTop: '32px' }}>Our Mission</h3>
-            <p>To empower Sri Lankan freelancers and businesses by providing a trusted, efficient platform where quality work meets opportunity. We believe in creating economic opportunities for everyone, from students to professionals.</p>
+            <h3 style={{ color: '#667eea', marginTop: '32px' }}>{t('about.ourMission')}</h3>
+            <p>{t('about.ourMissionText')}</p>
 
-            <h3 style={{ color: '#667eea', marginTop: '32px' }}>Why Choose Podiweda?</h3>
+            <h3 style={{ color: '#667eea', marginTop: '32px' }}>{t('about.whyChoose')}</h3>
             <ul style={{ paddingLeft: '20px' }}>
-              <li>Local Focus: Built specifically for the Sri Lankan market</li>
-              <li>Secure Platform: Safe payments and verified users</li>
-              <li>Wide Range of Services: From cleaning to design, we cover it all</li>
-              <li>Easy to Use: Simple interface for posting jobs and finding work</li>
-              <li>Community Driven: Supporting local talent and businesses</li>
+              {t('about.whyChooseItems').map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
             </ul>
 
-            <h3 style={{ color: '#667eea', marginTop: '32px' }}>Our Values</h3>
+            <h3 style={{ color: '#667eea', marginTop: '32px' }}>{t('about.ourValues')}</h3>
             <ul style={{ paddingLeft: '20px' }}>
-              <li><strong>Trust:</strong> Building a reliable platform for all users</li>
-              <li><strong>Quality:</strong> Ensuring high standards in every transaction</li>
-              <li><strong>Innovation:</strong> Continuously improving our services</li>
-              <li><strong>Community:</strong> Supporting Sri Lankan talent and businesses</li>
+              {t('about.ourValuesItems').map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
             </ul>
           </div>
         </div>
