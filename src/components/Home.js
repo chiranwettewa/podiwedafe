@@ -18,6 +18,7 @@ const Home = () => {
   const [editingTask, setEditingTask] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [notification, setNotification] = useState({ show: false, message: '', type: '' });
 
   const services = [
     { icon: '🧹', title: t('services.cleaningTitle'), desc: t('services.cleaningDesc') },
@@ -68,16 +69,18 @@ const Home = () => {
         });
         setTasks(tasks.map(t => t.id === updated.id ? updated : t));
         setEditingTask(null);
+        showNotification('Task updated successfully!');
       } else {
         const created = await apiRequest('/api/tasks', {
           method: 'POST',
           body: JSON.stringify(taskData)
         });
         setTasks([...tasks, created]);
+        showNotification('Task posted successfully!');
       }
     } catch (error) {
       console.error('Failed to save task:', error);
-      alert('Failed to save task. Please try again.');
+      showNotification('Failed to save task. Please try again.', 'error');
     }
   };
 
@@ -91,11 +94,19 @@ const Home = () => {
       try {
         await apiRequest(`/api/tasks/${taskId}`, { method: 'DELETE' });
         setTasks(tasks.filter(t => t.id !== taskId));
+        showNotification('Task deleted successfully!');
       } catch (error) {
         console.error('Failed to delete task:', error);
-        alert('Failed to delete task. Please try again.');
+        showNotification('Failed to delete task. Please try again.', 'error');
       }
     }
+  };
+
+  const showNotification = (message, type = 'success') => {
+    setNotification({ show: true, message, type });
+    setTimeout(() => {
+      setNotification({ show: false, message: '', type: '' });
+    }, 3000);
   };
 
   const handleCloseModal = () => {
@@ -105,6 +116,23 @@ const Home = () => {
 
   return (
     <div className="home-container">
+      {notification.show && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          background: notification.type === 'error' ? '#f56565' : '#48bb78',
+          color: 'white',
+          padding: '16px 24px',
+          borderRadius: '8px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          zIndex: 9999,
+          animation: 'slideIn 0.3s ease-out'
+        }}>
+          {notification.message}
+        </div>
+      )}
+      
       <nav className="home-nav">
         <div className="nav-logo">
           <img src={logo} alt="Podiweda" />
