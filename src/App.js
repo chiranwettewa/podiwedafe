@@ -5,6 +5,9 @@ import AuthContainer from './components/auth/AuthContainer';
 import Home from './components/Home';
 import MyTasks from './components/MyTasks';
 import Jobs from './components/Jobs';
+import About from './components/About';
+import Services from './components/Services';
+import EditProfile from './components/EditProfile';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -34,6 +37,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <Jobs />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <ProtectedRoute>
+                <About />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/services"
+            element={
+              <ProtectedRoute>
+                <Services />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <EditProfile />
               </ProtectedRoute>
             }
           />

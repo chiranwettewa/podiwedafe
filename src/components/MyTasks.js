@@ -15,6 +15,7 @@ const MyTasks = () => {
   const [editingTask, setEditingTask] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [notification, setNotification] = useState({ show: false, message: '', type: '' });
 
   useEffect(() => {
     fetchTasks();
@@ -41,25 +42,36 @@ const MyTasks = () => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
+  const showNotification = (message, type = 'success') => {
+    setNotification({ show: true, message, type });
+    setTimeout(() => {
+      setNotification({ show: false, message: '', type: '' });
+    }, 3000);
+  };
+
   const handlePostTask = async (taskData) => {
     try {
       if (editingTask) {
-        const updated = await apiRequest(`/api/tasks/${taskData.id}`, {
+        const updated = await apiRequest(`/api/tasks/${editingTask.id}`, {
           method: 'PUT',
           body: JSON.stringify(taskData)
         });
-        setTasks(tasks.map(t => t.id === updated.id ? updated : t));
+        setTasks(tasks.map(t => t.id === editingTask.id ? updated : t));
         setEditingTask(null);
+        setShowPostTask(false);
+        showNotification('Task updated successfully!');
       } else {
         const created = await apiRequest('/api/tasks', {
           method: 'POST',
           body: JSON.stringify(taskData)
         });
         setTasks([...tasks, created]);
+        setShowPostTask(false);
+        showNotification('Task created successfully!');
       }
     } catch (error) {
       console.error('Failed to save task:', error);
-      alert('Failed to save task. Please try again.');
+      showNotification('Failed to save task. Please try again.', 'error');
     }
   };
 
@@ -73,9 +85,10 @@ const MyTasks = () => {
       try {
         await apiRequest(`/api/tasks/${taskId}`, { method: 'DELETE' });
         setTasks(tasks.filter(t => t.id !== taskId));
+        showNotification('Task deleted successfully!');
       } catch (error) {
         console.error('Failed to delete task:', error);
-        alert('Failed to delete task. Please try again.');
+        showNotification('Failed to delete task. Please try again.', 'error');
       }
     }
   };
@@ -87,6 +100,22 @@ const MyTasks = () => {
 
   return (
     <div className="home-container">
+      {notification.show && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          background: notification.type === 'error' ? '#f56565' : '#48bb78',
+          color: 'white',
+          padding: '16px 24px',
+          borderRadius: '8px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          zIndex: 9999,
+          animation: 'slideIn 0.3s ease-out'
+        }}>
+          {notification.message}
+        </div>
+      )}
       <nav className="home-nav">
         <div className="nav-logo">
           <img src={logo} alt="Podiweda" />
@@ -95,6 +124,8 @@ const MyTasks = () => {
           <button className="nav-btn" onClick={() => navigate('/home')}>Home</button>
           <button className="nav-btn active">My Tasks</button>
           <button className="nav-btn" onClick={() => navigate('/jobs')}>Find Jobs</button>
+          <button className="nav-btn" onClick={() => navigate('/about')}>About</button>
+          <button className="nav-btn" onClick={() => navigate('/services')}>Services</button>
         </div>
         <div className="nav-right">
           <div className="profile-menu-container">
@@ -111,7 +142,7 @@ const MyTasks = () => {
                   </div>
                 </div>
                 <div className="profile-dropdown-divider"></div>
-                <button className="profile-dropdown-item" onClick={() => setShowProfileMenu(false)}>
+                <button className="profile-dropdown-item" onClick={() => { setShowProfileMenu(false); navigate('/profile'); }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>

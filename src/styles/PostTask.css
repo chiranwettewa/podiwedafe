@@ -265,6 +265,7 @@
   .modal-content {
     max-height: 95vh;
     margin: 0;
+    border-radius: 12px;
   }
 
   .modal-header {
@@ -287,6 +288,15 @@
   .form-group select,
   .form-group textarea {
     font-size: 16px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-cancel,
+  .btn-submit {
+    width: 100%;
   }
 
   .task-meta {

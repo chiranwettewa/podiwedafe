@@ -416,6 +416,7 @@
 
   .auth-card {
     padding: 24px 16px;
+    border-radius: 12px;
   }
 
   .auth-title {
@@ -424,19 +425,37 @@
 
   .auth-subtitle {
     font-size: 13px;
+    margin-bottom: 24px;
   }
 
   .auth-logo {
     width: 80px;
+    margin-bottom: 16px;
   }
 
   .form-group input,
   .auth-select {
     font-size: 16px;
+    padding: 10px 14px;
+  }
+
+  .auth-button {
+    padding: 12px;
+    font-size: 15px;
   }
 
   .social-btn-small {
     width: 44px;
     height: 44px;
+  }
+
+  .auth-form {
+    gap: 16px;
+  }
+
+  .auth-footer {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 13px;
   }
 }

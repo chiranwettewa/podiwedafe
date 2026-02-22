@@ -100,6 +100,8 @@ const Jobs = () => {
           <button className="nav-btn" onClick={() => navigate('/home')}>Home</button>
           <button className="nav-btn" onClick={() => navigate('/mytasks')}>My Tasks</button>
           <button className="nav-btn active">Find Jobs</button>
+          <button className="nav-btn" onClick={() => navigate('/about')}>About</button>
+          <button className="nav-btn" onClick={() => navigate('/services')}>Services</button>
         </div>
         <div className="nav-right">
           <div className="profile-menu-container">
@@ -115,7 +117,13 @@ const Jobs = () => {
                     <div className="profile-email">{user?.email}</div>
                   </div>
                 </div>
-                <div className="profile-dropdown-divider"></div>
+                <button className="profile-dropdown-item" onClick={() => { setShowProfileMenu(false); navigate('/profile'); }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  Edit Profile
+                </button>
                 <button className="profile-dropdown-item" onClick={handleSignOut}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
