@@ -4,6 +4,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
 import logo from '../assets/logo.png';
+import websiteImage from '../assets/websiteimage.png';
 import Navbar from './Navbar';
 import PostTask from './PostTask';
 import Footer from './Footer';
@@ -130,14 +131,14 @@ const Home = () => {
       <Navbar />
 
       <div className="home-content">
-        <div className="card">
-          <div style={{ textAlign: 'center' }}>
-            <img src={logo} alt="Podiweda" style={{ width: '120px', height: 'auto', marginBottom: '16px' }} />
-            <h2 style={{ margin: 0 }}>{t('home.welcome')}</h2>
+        <div className="hero-section">
+          <div className="hero-content">
+            <h1 className="hero-title">{t('home.welcome')}</h1>
+            <p className="hero-subtitle">{t('home.subtitle')}</p>
           </div>
-          <p className="card-subtitle">
-            {t('home.subtitle')}
-          </p>
+        </div>
+
+        <div className="card">
 
           <div style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', padding: '32px', borderRadius: '12px', color: 'white', marginTop: '24px' }}>
             <h3 style={{ marginTop: 0, textAlign: 'center' }}>{t('home.howItWorks')}</h3>
