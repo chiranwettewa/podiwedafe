@@ -8,20 +8,25 @@ const LanguageToggle = () => {
     <button
       onClick={toggleLanguage}
       style={{
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: 'white',
+        background: 'none',
+        color: '#4a5568',
         border: 'none',
-        padding: '10px',
+        padding: '8px',
         borderRadius: '8px',
         cursor: 'pointer',
-        fontWeight: '600',
-        fontSize: '14px',
         display: 'flex',
         alignItems: 'center',
-        transition: 'transform 0.2s'
+        justifyContent: 'center',
+        transition: 'all 0.3s'
       }}
-      onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
-      onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = '#f7fafc';
+        e.currentTarget.style.color = '#667eea';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = 'none';
+        e.currentTarget.style.color = '#4a5568';
+      }}
       title={language === 'en' ? 'Switch to Sinhala' : 'ඉංග්‍රීසි භාෂාවට මාරු වන්න'}
     >
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

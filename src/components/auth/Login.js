@@ -47,7 +47,7 @@ const Login = ({ onSwitchToSignup, onSwitchToForgotPassword }) => {
     <>
       <div className="auth-form-container fade-in">
       <img src={logo} alt="Podiweda" className="auth-logo" />
-      <h2 className="auth-title">{t('home.welcome')} <span style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Podiweda.com</span></h2>
+      <h2 className="auth-title">{t('home.welcome')}</h2>
       <p className="auth-subtitle">{t('auth.signIn')} to your account</p>
 
       <form onSubmit={handleSubmit} className="auth-form">

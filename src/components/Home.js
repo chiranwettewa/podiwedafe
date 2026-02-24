@@ -4,20 +4,19 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
 import logo from '../assets/logo.png';
+import Navbar from './Navbar';
 import PostTask from './PostTask';
 import Footer from './Footer';
-import LanguageToggle from './LanguageToggle';
 import { apiRequest } from '../utils/api';
 
 const Home = () => {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [showPostTask, setShowPostTask] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [notification, setNotification] = useState({ show: false, message: '', type: '' });
 
   const services = [
@@ -48,11 +47,6 @@ const Home = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSignOut = () => {
-    signOut();
-    navigate('/login');
   };
 
   const getInitials = (name) => {
@@ -133,58 +127,13 @@ const Home = () => {
         </div>
       )}
       
-      <nav className="home-nav">
-        <div className="nav-logo">
-          <img src={logo} alt="Podiweda" />
-        </div>
-        <div className="nav-center">
-          <button className="nav-btn active">{t('nav.home')}</button>
-          <button className="nav-btn" onClick={() => navigate('/mytasks')}>{t('nav.myTasks')}</button>
-          <button className="nav-btn" onClick={() => navigate('/jobs')}>{t('nav.findJobs')}</button>
-          <button className="nav-btn" onClick={() => navigate('/about')}>{t('nav.about')}</button>
-        </div>
-        <div className="nav-right">
-          <LanguageToggle />
-          <div className="profile-menu-container">
-            <button className="profile-avatar" onClick={() => setShowProfileMenu(!showProfileMenu)}>
-              {getInitials(user?.name)}
-            </button>
-            {showProfileMenu && (
-              <div className="profile-dropdown">
-                <div className="profile-dropdown-header">
-                  <div className="profile-avatar-large">{getInitials(user?.name)}</div>
-                  <div>
-                    <div className="profile-name">{user?.name}</div>
-                    <div className="profile-email">{user?.email}</div>
-                  </div>
-                </div>
-                <div className="profile-dropdown-divider"></div>
-                <button className="profile-dropdown-item" onClick={() => { setShowProfileMenu(false); navigate('/profile'); }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
-                  {t('nav.profile')}
-                </button>
-                <button className="profile-dropdown-item" onClick={handleSignOut}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    <polyline points="16 17 21 12 16 7"/>
-                    <line x1="21" y1="12" x2="9" y2="12"/>
-                  </svg>
-                  {t('nav.signOut')}
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="home-content">
         <div className="card">
           <div style={{ textAlign: 'center' }}>
-            <h2 style={{ marginBottom: '8px' }}>{t('home.welcome')}</h2>
-            <h2 style={{ margin: 0 }}><span style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Podiweda.com</span></h2>
+            <img src={logo} alt="Podiweda" style={{ width: '120px', height: 'auto', marginBottom: '16px' }} />
+            <h2 style={{ margin: 0 }}>{t('home.welcome')}</h2>
           </div>
           <p className="card-subtitle">
             {t('home.subtitle')}

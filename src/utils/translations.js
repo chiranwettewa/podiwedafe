@@ -10,7 +10,7 @@ export const translations = {
       profile: 'Profile'
     },
     home: {
-      welcome: 'Welcome to Podiweda',
+      welcome: 'Welcome to Podiweda.com',
       subtitle: 'Find local help for everyday tasks',
       postTask: 'Post a Task',
       browseServices: 'Browse Services',
@@ -151,7 +151,7 @@ export const translations = {
       profile: 'පැතිකඩ'
     },
     home: {
-      welcome: 'පොඩිවැඩ වෙත සාදරයෙන් පිළිගනිමු',
+      welcome: 'Podiweda.com වෙත සාදරයෙන් පිළිගනිමු',
       subtitle: 'එදිනෙදා කාර්යයන් සඳහා දේශීය උදව් සොයන්න',
       postTask: 'කාර්යයක් පළ කරන්න',
       browseServices: 'සේවා බලන්න',
