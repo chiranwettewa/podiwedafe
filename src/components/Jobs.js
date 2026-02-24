@@ -177,7 +177,7 @@ const Jobs = () => {
                   <div style={{ fontSize: '13px', color: '#718096', marginBottom: '12px' }}>
                     Due: {new Date(job.dueDate).toLocaleDateString()}
                   </div>
-                  <button className="btn-action">Apply Now</button>
+                  <button className="btn-action" onClick={() => navigate('/viewjob', { state: { job } })}>View</button>
                 </div>
               ))}
             </div>

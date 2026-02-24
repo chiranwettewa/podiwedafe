@@ -6,6 +6,7 @@ import AuthContainer from './components/auth/AuthContainer';
 import Home from './components/Home';
 import MyTasks from './components/MyTasks';
 import Jobs from './components/Jobs';
+import ViewJob from './components/ViewJob';
 import About from './components/About';
 import EditProfile from './components/EditProfile';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -38,6 +39,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Jobs />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/viewjob"
+              element={
+                <ProtectedRoute>
+                  <ViewJob />
                 </ProtectedRoute>
               }
             />
